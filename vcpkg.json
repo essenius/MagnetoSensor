@@ -1,0 +1,8 @@
+{
+  "dependencies": [
+    {
+      "name": "esp32-mock",
+      "version>=": "0.1.0"
+    }
+  ]
+}
