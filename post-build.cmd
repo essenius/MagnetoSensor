@@ -20,6 +20,6 @@ copy "%basePath%README.md" "%temp%\%project%"
 rem Create target folder if needed
 if not exist "%basePath%publish" mkdir "%basePath%publish"
 rem Create the ZIP file from the temp structure
-powershell.exe -Command Compress-Archive -Path '%temp%\%project%\*' -DestinationPath '%basePath%publish\%project%.zip' -Force
+powershell.exe -Command Compress-Archive -Path '%temp%\%project%' -DestinationPath '%basePath%publish\%project%.zip' -Force
 rem Clean up the temporary folder
 rmdir "%temp%\%project%" /s /q
