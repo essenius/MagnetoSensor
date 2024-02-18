@@ -17,11 +17,7 @@
 // If you want to work directly off 3.3V that works too - then you can eliminate the digitalWrite to the power pin.
 
 #include <Wire.h>
-#ifdef ESP32
 #include <MagnetoSensorQmc.h>
-#else
-#include "../src/MagnetoSensorQmc.h"
-#endif
 
 using namespace MagnetoSensors;
 

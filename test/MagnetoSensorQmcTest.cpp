@@ -11,7 +11,7 @@
 
 #include "gtest/gtest.h"
 #include "Wire.h"
-#include "../src/MagnetoSensorQmc.h"
+#include <MagnetoSensorQmc.h>
 
 namespace MagnetoSensorsTest {
     using MagnetoSensors::MagnetoSensorQmc;

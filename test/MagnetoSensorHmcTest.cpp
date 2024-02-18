@@ -10,8 +10,8 @@
 // See the License for the specific language governing permissions and limitations under the License.
 
 #include "gtest/gtest.h"
-#include "Wire.h"
-#include "../src/MagnetoSensorHmc.h"
+#include <Wire.h>
+#include <MagnetoSensorHmc.h>
 
 namespace MagnetoSensorsTest {
     using namespace MagnetoSensors;

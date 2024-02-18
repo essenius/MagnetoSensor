@@ -11,7 +11,7 @@
 #ifndef MAGNETOSENSOR_MOCK_H
 #define MAGNETOSENSOR_MOCK_H
 
-#include "../src/MagnetoSensor.h"
+#include <MagnetoSensor.h>
 
 namespace MagnetoSensorsTest {
     using namespace MagnetoSensors;
