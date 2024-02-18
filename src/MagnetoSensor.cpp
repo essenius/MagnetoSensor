@@ -13,9 +13,7 @@
 #include "Wire.h"
 
 namespace MagnetoSensors {
-    MagnetoSensor::MagnetoSensor(const byte address, TwoWire* wire) :
-        _address(address),
-        _wire(wire) {}
+    MagnetoSensor::MagnetoSensor(const byte address, TwoWire* wire) : _address(address), _wire(wire) {}
 
     bool MagnetoSensor::begin() {
         softReset();
@@ -26,7 +24,7 @@ namespace MagnetoSensors {
         _address = address;
     }
 
-    bool MagnetoSensor::isOn() const {
+    bool MagnetoSensor::isOn() {
         _wire->beginTransmission(_address);
         return _wire->endTransmission() == 0;
     }
@@ -38,7 +36,7 @@ namespace MagnetoSensors {
         _wire->endTransmission();
     }
 
-    void MagnetoSensor::waitForPowerOff() const {
+    void MagnetoSensor::waitForPowerOff() {
         while (isOn()) {}
     }
 

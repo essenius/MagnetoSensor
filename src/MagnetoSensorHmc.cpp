@@ -1,4 +1,4 @@
-// Copyright 2022-2023 Rik Essenius
+// Copyright 2022-2024 Rik Essenius
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -9,11 +9,14 @@
 // is distributed on an "AS IS" BASIS WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and limitations under the License.
 
+// Disabling a few static analysis findings for code clarity. The issues are related to:
+// * conversions that might in theory go wrong, but the sensor won't return too high values.
+// * using enum values to do bitwise manipulations
+
 // ReSharper disable CppClangTidyBugproneNarrowingConversions
 // ReSharper disable CppClangTidyClangDiagnosticImplicitIntConversion
 // ReSharper disable CppClangTidyClangDiagnosticEnumEnumConversion
 // ReSharper disable CppClangTidyBugproneSuspiciousEnumUsage
-// ReSharper disable CppClangTidyBugproneBranchClone -- false positive
 
 #include "MagnetoSensorHmc.h"
 #include "Wire.h"
@@ -42,31 +45,38 @@ namespace MagnetoSensors {
         return getGain(_range);
     }
 
+    HmcRange MagnetoSensorHmc::getRange() const {
+        return _range;
+    }
+
     int MagnetoSensorHmc::getNoiseRange() const {
         switch (_range) {
-        case HmcRange0_88: return 8;
-        case HmcRange1_3: return 5;
-        case HmcRange1_9: return 5;
-        case HmcRange2_5: return 4;
-        case HmcRange4_0: return 4;
-        case HmcRange4_7: return 3; // was 4
-        case HmcRange5_6:
-        default: return 2;
+            case HmcRange0_88: return 8;
+            case HmcRange1_3:
+            case HmcRange1_9: return 5;
+            case HmcRange2_5:
+            case HmcRange4_0: return 4;
+            case HmcRange4_7: return 3; // was 4
+            case HmcRange5_6:
+            case HmcRange8_1: return 2;
         }
+        // should not happen
+        return 0;
     }
 
     double MagnetoSensorHmc::getGain(const HmcRange range) {
         switch (range) {
-        case HmcRange0_88: return 1370.0;
-        case HmcRange1_3: return 1090.0;
-        case HmcRange1_9: return 820.0;
-        case HmcRange2_5: return 660.0;
-        case HmcRange4_0: return 440.0;
-        case HmcRange4_7: return 390.0;
-        case HmcRange5_6: return 330.0;
-        default: return 230.0;
+            case HmcRange0_88: return 1370.0;
+            case HmcRange1_3: return 1090.0;
+            case HmcRange1_9: return 820.0;
+            case HmcRange2_5: return 660.0;
+            case HmcRange4_0: return 440.0;
+            case HmcRange4_7: return 390.0;
+            case HmcRange5_6: return 330.0;
+            case HmcRange8_1: return 230.0;
         }
-
+        // should not happen
+        return 0;
     }
 
     void MagnetoSensorHmc::getTestMeasurement(SensorData& reading) {
@@ -84,7 +94,7 @@ namespace MagnetoSensors {
 
         //Read data from each axis, 2 registers per axis
         // order: x MSB, x LSB, z MSB, z LSB, y MSB, y LSB
-        constexpr size_t BytesToRead = 6;
+        constexpr int BytesToRead = 6;
         _wire->requestFrom(_address, BytesToRead, StopAfterSend);
         const auto timestamp = micros();
         while (_wire->available() < BytesToRead) {
@@ -98,9 +108,12 @@ namespace MagnetoSensors {
         sample.y = _wire->read() << 8;
         sample.y |= _wire->read();
         // harmonize saturation values across sensors
-        if (sample.x <= Saturated) sample.x = SHRT_MIN;
-        if (sample.y <= Saturated) sample.y = SHRT_MIN;
-        if (sample.z <= Saturated) sample.z = SHRT_MIN;
+        if (sample.x <= Saturated)
+            sample.x = SHRT_MIN;
+        if (sample.y <= Saturated)
+            sample.y = SHRT_MIN;
+        if (sample.z <= Saturated)
+            sample.z = SHRT_MIN;
         return true;
     }
 
@@ -131,6 +144,8 @@ namespace MagnetoSensors {
 
         // read old value (still with old settings) 
         getTestMeasurement(sample);
+        // the first one with new settings may still be a bit off
+        getTestMeasurement(sample);
 
         // now do the test
         getTestMeasurement(sample);
@@ -146,5 +161,12 @@ namespace MagnetoSensors {
 
     bool MagnetoSensorHmc::handlePowerOn() {
         return test();
+    }
+
+    bool MagnetoSensorHmc::increaseRange() {
+        if (_range == HmcRange8_1) return false;
+        _range = static_cast<HmcRange>(static_cast<int>(_range) + 32);
+        softReset();
+        return true;
     }
 }

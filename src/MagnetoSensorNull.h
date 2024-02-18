@@ -1,4 +1,4 @@
-// Copyright 2022-2023 Rik Essenius
+// Copyright 2022-2024 Rik Essenius
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -11,8 +11,8 @@
 
 // If we don't detect a sensor, we use this null sensor instead. That makes the code a bit cleaner.
 
-#ifndef HEADER_MAGNETOSENSORNULL
-#define HEADER_MAGNETOSENSORNULL
+#ifndef HEADER_MAGNETOSENSOR_NULL
+#define HEADER_MAGNETOSENSOR_NULL
 
 #include "MagnetoSensor.h"
 
@@ -33,7 +33,7 @@ namespace MagnetoSensors {
             return 0;
         }
 
-        bool isOn() const override {
+        bool isOn() override {
             return true;
         }
 
@@ -48,7 +48,7 @@ namespace MagnetoSensors {
 
         void softReset() override {}
 
-        void waitForPowerOff() const override {}
+        void waitForPowerOff() override {}
     };
 }
 #endif

@@ -72,6 +72,9 @@
       <AdditionalLibraryDirectories>..\src\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
     </Link>
+    <PostBuildEvent>
+      <Command>call $(SolutionDir)post-build.cmd</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -106,12 +109,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Hmc5883LDemo.cpp" />
     <ClCompile Include="MagnetoSensorHmcTest.cpp" />
+    <ClCompile Include="MagnetoSensorMock.cpp" />
     <ClCompile Include="MagnetoSensorNullTest.cpp" />
     <ClCompile Include="MagnetoSensorQmcTest.cpp" />
+    <ClCompile Include="MagnetoSensorTest.cpp" />
+    <ClCompile Include="Qmc5883LDemo.cpp" />
+    <ClCompile Include="SensorDataTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MagnetoSensorMock.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="CMakeLists.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

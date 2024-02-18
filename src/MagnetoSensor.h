@@ -1,4 +1,4 @@
-// Copyright 2022-2023 Rik Essenius
+// Copyright 2022-2024 Rik Essenius
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -25,23 +25,9 @@
 
 #include <ESP.h>
 #include <Wire.h>
+#include "SensorData.h"
 
 namespace MagnetoSensors {
-    struct SensorData {
-        short x;
-        short y;
-        short z;
-
-        void reset() {
-            x = 0;
-            y = 0;
-            z = 0;
-        }
-
-        bool operator==(const SensorData& other) const {
-            return this->x == other.x && this->y == other.y && this->z == other.z;
-        }
-    };
 
     // not using enum classes as we prefer weak typing to make the code more readable
 
@@ -64,8 +50,10 @@ namespace MagnetoSensors {
 
         virtual int getNoiseRange() const = 0;
 
+        virtual bool handlePowerOn();
+
         // returns whether the sensor is active
-        virtual bool isOn() const;
+        virtual bool isOn();
 
         virtual bool isReal() const {
             return true;
@@ -77,9 +65,8 @@ namespace MagnetoSensors {
         // soft reset the sensor
         virtual void softReset() = 0;
 
-        virtual void waitForPowerOff() const;
+        virtual void waitForPowerOff();
 
-        virtual bool handlePowerOn();
     protected:
         static constexpr bool StopAfterSend = true;
         byte _address;

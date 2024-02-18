@@ -1,4 +1,4 @@
-// Copyright 2022-2023 Rik Essenius
+// Copyright 2022-2024 Rik Essenius
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -12,11 +12,8 @@
 // Driver for the HMC5883L sensor.
 // Datasheet: see https://cdn-shop.adafruit.com/datasheets/HMC5883L_3-Axis_Digital_Compass_IC.pdf
 
-// need the underscores as decimal point is not allowed either.
-// ReSharper disable CppInconsistentNaming
-
-#ifndef HEADER_MAGNETOSENSORHMC
-#define HEADER_MAGNETOSENSORHMC
+#ifndef HEADER_MAGNETOSENSOR_HMC
+#define HEADER_MAGNETOSENSOR_HMC
 
 #include "MagnetoSensor.h"
 
@@ -78,11 +75,14 @@ namespace MagnetoSensors {
 
     class MagnetoSensorHmc final : public MagnetoSensor {
     public:
-        explicit MagnetoSensorHmc(TwoWire* wire = &Wire);
+        explicit MagnetoSensorHmc(TwoWire* wire);
         void configureRange(HmcRange range);
         void configureOverSampling(HmcOverSampling overSampling);
         void configureRate(HmcRate rate);
+        bool handlePowerOn() override;
+        bool increaseRange();
         double getGain() const override;
+        HmcRange getRange() const;
         int getNoiseRange() const override;
         static double getGain(HmcRange range);
         bool read(SensorData& sample) override;
@@ -90,7 +90,7 @@ namespace MagnetoSensors {
         static bool testInRange(const SensorData& sample);
         bool test();
         static constexpr byte DefaultAddress = 0x1E;
-        bool handlePowerOn() override;
+
     private:
         static constexpr int16_t Saturated = -4096;
         void configure(HmcRange range, HmcBias bias) const;

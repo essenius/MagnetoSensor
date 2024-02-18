@@ -1,4 +1,4 @@
-﻿// Copyright 2022-2023 Rik Essenius
+﻿// Copyright 2022-2024 Rik Essenius
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -29,7 +29,7 @@ namespace MagnetoSensorsTest {
     }
 
     TEST(MagnetoSensorQmcTest, magnetoSensorQmcAddressTest) {
-        MagnetoSensorQmc sensor;
+        MagnetoSensorQmc sensor(&Wire);
         constexpr uint8_t Address = 0x23;
         sensor.configureAddress(Address);
         Wire.begin();
@@ -42,18 +42,19 @@ namespace MagnetoSensorsTest {
     }
 
     TEST(MagnetoSensorQmcTest, magnetoSensorQmcDefaultAddressTest) {
-        MagnetoSensorQmc sensor;
+        MagnetoSensorQmc sensor(&Wire);
         Wire.begin();
         sensor.begin();
         EXPECT_EQ(MagnetoSensorQmc::DefaultAddress, Wire.getAddress()) << "Default address OK";
     }
 
     TEST(MagnetoSensorQmcTest, NoiseRangeTest) {
-        const MagnetoSensorQmc sensor;
+        const MagnetoSensorQmc sensor(&Wire);
         EXPECT_EQ(60, sensor.getNoiseRange()) << "Noise range is 60";
     }
+
     TEST(MagnetoSensorQmcTest, magnetoSensorQmcScriptTest) {
-        MagnetoSensorQmc sensor;
+        MagnetoSensorQmc sensor(&Wire);
         Wire.begin();
         sensor.begin();
         constexpr uint8_t BufferBegin[] = {10, 0x80, 11, 0x01, 9, 0x19};
@@ -61,6 +62,7 @@ namespace MagnetoSensorsTest {
         // we are at the default address so the sensor should report it's on
         Wire.setEndTransmissionTogglePeriod(1);
         EXPECT_TRUE(sensor.isOn()) << "Sensor on";
+        EXPECT_EQ(QmcRange8G, sensor.getRange()) << "Range OK";
         // reset buffer
         Wire.begin();
         SensorData sample{};
@@ -85,6 +87,5 @@ namespace MagnetoSensorsTest {
         sensor.begin();
         constexpr uint8_t BufferReconfigure[] = {10, 0x80, 11, 0x01, 9, 0x8d};
         EXPECT_EQ(sizeof BufferReconfigure, Wire.writeMismatchIndex(BufferReconfigure, sizeof BufferReconfigure)) << "Writes for reconfigure ok";
-
     }
 }

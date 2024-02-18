@@ -1,4 +1,4 @@
-// Copyright 2022-2023 Rik Essenius
+// Copyright 2022-2024 Rik Essenius
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -9,7 +9,7 @@
 // is distributed on an "AS IS" BASIS WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and limitations under the License.
 
-// Disabling a few ReSharper issues for code clarity. The issues are related to:
+// Disabling a few static analysis findings for code clarity. The issues are related to:
 // * conversions that might in theory go wrong, but the sensor won't return too high values.
 // * using enum values to do bitwise manipulations
 
@@ -55,12 +55,16 @@ namespace MagnetoSensors {
         return 12000.0;
     }
 
+    QmcRange MagnetoSensorQmc::getRange() const {
+        return _range;
+    }
+
     bool MagnetoSensorQmc::read(SensorData& sample) {
         _wire->beginTransmission(_address);
         _wire->write(QmcData);
         _wire->endTransmission();
 
-        constexpr byte BytesToRead = 6;
+        constexpr size_t BytesToRead = 6;
         constexpr byte BitsPerByte = 8;
         // Read data from each axis, 2 registers per axis
         // order: x LSB, x MSB, y LSB, y MSB, z LSB, z MSB

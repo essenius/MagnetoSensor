@@ -9,14 +9,24 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		.runsettings = .runsettings
+		CMakeLists.txt = CMakeLists.txt
+		keywords.txt = keywords.txt
+		library.properties = library.properties
 		LICENSE = LICENSE
 		MagnetoSensor.sln.DotSettings = MagnetoSensor.sln.DotSettings
+		post-build.cmd = post-build.cmd
 		README.md = README.md
 		vcpkg-configuration.json = vcpkg-configuration.json
 		vcpkg.json = vcpkg.json
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "test\test.vcxproj", "{58965E7C-75F6-4F46-B57A-1632F3707226}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{26565C8A-09DC-4B9B-83FA-1BA300B67F3C}"
+	ProjectSection(SolutionItems) = preProject
+		lib\CMakeLists.txt = lib\CMakeLists.txt
+		lib\tools.cmake = lib\tools.cmake
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

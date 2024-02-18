@@ -1,4 +1,4 @@
-// Copyright 2022-2023 Rik Essenius
+// Copyright 2022-2024 Rik Essenius
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -12,8 +12,8 @@
 // Driver for the QMC5883L sensor.
 // Datasheet: https://github.com/e-Gizmo/QMC5883L-GY-271-Compass-module/blob/master/QMC5883L%20Datasheet%201.0%20.pdf
 
-#ifndef HEADER_MAGNETOSENSORQMC
-#define HEADER_MAGNETOSENSORQMC
+#ifndef HEADER_MAGNETOSENSOR_QMC
+#define HEADER_MAGNETOSENSOR_QMC
 
 // OK with the unscoped types
 #pragma warning (disable:26812)
@@ -62,7 +62,7 @@ namespace MagnetoSensors {
 
     class MagnetoSensorQmc final : public MagnetoSensor {
     public:
-        explicit MagnetoSensorQmc(TwoWire* wire = &Wire);
+        explicit MagnetoSensorQmc(TwoWire* wire);
         // Configure the sensor according to the configuration parameters (called in begin())
         bool configure() const;
 
@@ -79,6 +79,8 @@ namespace MagnetoSensors {
         double getGain() const override;
 
         static double getGain(QmcRange range);
+
+        QmcRange getRange() const;
 
         // read a sample from the sensor
         bool read(SensorData& sample) override;

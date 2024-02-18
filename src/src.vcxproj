@@ -147,11 +147,15 @@
     <ClInclude Include="MagnetoSensorHmc.h" />
     <ClInclude Include="MagnetoSensorNull.h" />
     <ClInclude Include="MagnetoSensorQmc.h" />
+    <ClInclude Include="SensorData.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MagnetoSensor.cpp" />
     <ClCompile Include="MagnetoSensorHmc.cpp" />
     <ClCompile Include="MagnetoSensorQmc.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="CMakeLists.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

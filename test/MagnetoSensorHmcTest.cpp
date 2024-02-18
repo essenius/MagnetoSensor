@@ -1,4 +1,4 @@
-﻿// Copyright 2022 Rik Essenius
+﻿// Copyright 2022-2024 Rik Essenius
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -17,7 +17,7 @@ namespace MagnetoSensorsTest {
     using namespace MagnetoSensors;
 
     TEST(MagnetoSensorHmcTest, magnetoSensorHmcCustomAddressTest) {
-        MagnetoSensorHmc sensor;
+        MagnetoSensorHmc sensor(&Wire);
         constexpr uint8_t Address = 0x23;
         sensor.configureAddress(Address);
         Wire.begin();
@@ -34,15 +34,38 @@ namespace MagnetoSensorsTest {
         EXPECT_EQ(390.0, MagnetoSensorHmc::getGain(HmcRange4_7)) << "4.7G gain ok";
         EXPECT_EQ(330.0, MagnetoSensorHmc::getGain(HmcRange5_6)) << "5.6G gain ok";
         EXPECT_EQ(230.0, MagnetoSensorHmc::getGain(HmcRange8_1)) << "8.1G gain ok";
-        MagnetoSensorHmc sensor;
+        MagnetoSensorHmc sensor(&Wire);
         sensor.configureRange(HmcRange2_5);
         EXPECT_EQ(660.f, sensor.getGain()) << "getGain() returns correct value";
     }
 
     TEST(MagnetoSensorHmcTest, magnetoSensorHmcTestTest) {
-        MagnetoSensorHmc sensor;
+        MagnetoSensorHmc sensor(&Wire);
         Wire.begin();
         EXPECT_FALSE(sensor.handlePowerOn()) << "Sensor Test failed";
+    }
+
+    TEST(MagnetoSensorHmcTest, increaseRangeTest) {
+        MagnetoSensorHmc sensor(&Wire);
+        sensor.configureRange(HmcRange0_88);
+        sensor.begin();
+        EXPECT_EQ(HmcRange0_88, sensor.getRange());
+        EXPECT_TRUE(sensor.increaseRange());
+        EXPECT_EQ(HmcRange1_3, sensor.getRange());
+        EXPECT_TRUE(sensor.increaseRange());
+        EXPECT_EQ(HmcRange1_9, sensor.getRange());
+        EXPECT_TRUE(sensor.increaseRange());
+        EXPECT_EQ(HmcRange2_5, sensor.getRange());
+        EXPECT_TRUE(sensor.increaseRange());
+        EXPECT_EQ(HmcRange4_0, sensor.getRange());
+        EXPECT_TRUE(sensor.increaseRange());
+        EXPECT_EQ(HmcRange4_7, sensor.getRange());
+        EXPECT_TRUE(sensor.increaseRange());
+        EXPECT_EQ(HmcRange5_6, sensor.getRange());
+        EXPECT_TRUE(sensor.increaseRange());
+        EXPECT_EQ(HmcRange8_1, sensor.getRange());
+        EXPECT_FALSE(sensor.increaseRange());
+        EXPECT_EQ(HmcRange8_1, sensor.getRange());
     }
 
     TEST(MagnetoSensorHmcTest, magnetoSensorHmcTestInRangeTest) {
@@ -65,7 +88,7 @@ namespace MagnetoSensorsTest {
     }
 
     TEST(MagnetoSensorHmcTest, magnetoSensorHmcScriptTest) {
-        MagnetoSensorHmc sensor;
+        MagnetoSensorHmc sensor(&Wire);
         setRealTime(true);
         Wire.begin();
         sensor.begin();
@@ -75,6 +98,7 @@ namespace MagnetoSensorsTest {
         // we are at the default address so the sensor should report it's on
         Wire.setEndTransmissionTogglePeriod(1);
         EXPECT_TRUE(sensor.isOn()) << "Sensor is on";
+        EXPECT_EQ(HmcRange4_7, sensor.getRange()) << "Range OK";
         // reset buffer
         Wire.begin();
         SensorData sample{};
@@ -109,4 +133,3 @@ namespace MagnetoSensorsTest {
         EXPECT_EQ(sizeof BufferReconfigure, Wire.writeMismatchIndex(BufferReconfigure, sizeof BufferReconfigure)) << "writes for reconfigure ok";
     }
 }
-
