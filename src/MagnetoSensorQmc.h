@@ -95,6 +95,8 @@ namespace MagnetoSensors {
         QmcOverSampling _overSampling = QmcSampling512;
         QmcRange _range = QmcRange8G;
         QmcRate _rate = QmcRate100Hz;
+
+        short readWord() const;
     };
 }
 #endif

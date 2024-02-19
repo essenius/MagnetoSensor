@@ -59,26 +59,31 @@ namespace MagnetoSensors {
         return _range;
     }
 
+    short MagnetoSensorQmc::readWord() const {
+        constexpr byte BitsPerByte = 8;
+
+        // preventing compiler optimization as read() has side effects
+        // order is LSB, MSB
+        short result = _wire->read();
+        result |= _wire->read() << BitsPerByte;
+        // if we got a positive saturation, shift it to SHRT_MIN as SHRT_MAX means an error
+        if (result == SHRT_MAX) result = SHRT_MIN;
+        return result;
+    }
+
     bool MagnetoSensorQmc::read(SensorData& sample) {
         _wire->beginTransmission(_address);
         _wire->write(QmcData);
         _wire->endTransmission();
 
         constexpr size_t BytesToRead = 6;
-        constexpr byte BitsPerByte = 8;
         // Read data from each axis, 2 registers per axis
         // order: x LSB, x MSB, y LSB, y MSB, z LSB, z MSB
         _wire->requestFrom(_address, BytesToRead, StopAfterSend);
         while (_wire->available() < BytesToRead) {}
-        sample.x = _wire->read() | _wire->read() << BitsPerByte;
-        sample.y = _wire->read() | _wire->read() << BitsPerByte;
-        sample.z = _wire->read() | _wire->read() << BitsPerByte;
-
-        // if we got a positive saturation, shift it to SHRT_MIN as SHRT_MAX means an error
-        if (sample.x == SHRT_MAX) sample.x = SHRT_MIN;
-        if (sample.y == SHRT_MAX) sample.y = SHRT_MIN;
-        if (sample.z == SHRT_MAX) sample.z = SHRT_MIN;
-
+        sample.x = readWord();
+        sample.y = readWord();
+        sample.z = readWord();
         return true;
     }
 

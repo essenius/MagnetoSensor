@@ -109,8 +109,8 @@ namespace MagnetoSensorsTest {
         EXPECT_EQ(0x0203, sample.z) << "Z ok";
 
         // force a lower value than the saturation. This will be 0xeeee, which is -4370, i.e. less than -4096
-        constexpr int Saturated = 0xee;
-        Wire.setFlatline(true, Saturated);
+        constexpr int SaturatedByte = 0xee;
+        Wire.setFlatline(true, SaturatedByte);
         sensor.read(sample);
         EXPECT_EQ(SHRT_MIN, sample.x) << "X saturated";
         EXPECT_EQ(SHRT_MIN, sample.y) << "Y saturated";

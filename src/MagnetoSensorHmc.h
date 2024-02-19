@@ -95,6 +95,7 @@ namespace MagnetoSensors {
         static constexpr int16_t Saturated = -4096;
         void configure(HmcRange range, HmcBias bias) const;
         void getTestMeasurement(SensorData& reading);
+        short readWord() const;
         void startMeasurement() const;
 
         // 4.7 is not likely to get an overflow, and reasonably accurate

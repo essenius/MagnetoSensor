@@ -85,6 +85,21 @@ namespace MagnetoSensors {
         read(reading);
     }
 
+    short MagnetoSensorHmc::readWord() const {
+        constexpr byte BitsPerByte = 8;
+
+        // preventing compiler optimization as read() has side effects
+        // order is MSB, LSB
+        short result = _wire->read() << BitsPerByte;
+        result |= _wire->read();
+
+        // harmonize saturation values across sensors
+        if (result <= Saturated) {
+            result = SHRT_MIN;
+        }
+        return result;
+    }
+
     bool MagnetoSensorHmc::read(SensorData& sample) {
         startMeasurement();
 
@@ -100,20 +115,9 @@ namespace MagnetoSensors {
         while (_wire->available() < BytesToRead) {
             if (micros() - timestamp > 10) return false;
         }
-
-        sample.x = _wire->read() << 8;
-        sample.x |= _wire->read();
-        sample.z = _wire->read() << 8;
-        sample.z |= _wire->read();
-        sample.y = _wire->read() << 8;
-        sample.y |= _wire->read();
-        // harmonize saturation values across sensors
-        if (sample.x <= Saturated)
-            sample.x = SHRT_MIN;
-        if (sample.y <= Saturated)
-            sample.y = SHRT_MIN;
-        if (sample.z <= Saturated)
-            sample.z = SHRT_MIN;
+        sample.x = readWord();
+        sample.z = readWord();
+        sample.y = readWord();
         return true;
     }
 
