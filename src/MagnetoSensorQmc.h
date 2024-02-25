@@ -18,7 +18,6 @@
 // OK with the unscoped types
 #pragma warning (disable:26812)
 
-#include "ESP.h"
 #include "MagnetoSensor.h"
 
 namespace MagnetoSensors {
@@ -89,9 +88,10 @@ namespace MagnetoSensors {
         void softReset() override;
         int getNoiseRange() const override;
 
-        static constexpr byte DefaultAddress = 0x0D;
 
     private:
+        static constexpr byte DefaultAddress = 0x0D;
+        
         QmcOverSampling _overSampling = QmcSampling512;
         QmcRange _range = QmcRange8G;
         QmcRate _rate = QmcRate100Hz;

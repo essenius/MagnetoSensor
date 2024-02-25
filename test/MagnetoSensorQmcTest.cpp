@@ -45,7 +45,7 @@ namespace MagnetoSensorsTest {
         MagnetoSensorQmc sensor(&Wire);
         Wire.begin();
         sensor.begin();
-        EXPECT_EQ(MagnetoSensorQmc::DefaultAddress, Wire.getAddress()) << "Default address OK";
+        EXPECT_EQ(0x0d, Wire.getAddress()) << "Default address OK";
     }
 
     TEST(MagnetoSensorQmcTest, NoiseRangeTest) {

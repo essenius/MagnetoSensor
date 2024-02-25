@@ -3,9 +3,10 @@ include(tools)
 include(FindGit)
 find_package(Git)
 
-assertVariableSet(projectName projectTestName Git_FOUND)
+assertVariableSet(projectName projectTestName Git_FOUND espMockName)
 
 include(FetchContent)
+
 FetchContent_Declare(
     googletest
     GIT_REPOSITORY https://github.com/google/googletest
@@ -20,10 +21,13 @@ FetchContent_MakeAvailable_With_Check(googletest)
 
 add_executable(${projectTestName} "")
 
-set(myHeaders MagnetoSensorTest.h MagnetoSensorHmcTest.h MagnetoSensorNullTest.h MagnetoSensorQmcTest.h)
-set(mySources MagnetoSensorTest.cpp MagnetoSensorHmcTest.cpp MagnetoSensorNullTest.cpp MagnetoSensorQmcTest.cpp)
-target_sources (${projectTestName} PRIVATE ${myHeaders} PRIVATE ${mySources})
+target_sources (${projectTestName} 
+    PRIVATE MagnetoSensorMock.h 
+    PRIVATE MagnetoSensorTest.cpp MagnetoSensorHmcTest.cpp MagnetoSensorNullTest.cpp MagnetoSensorQmcTest.cpp MagnetoSensorMock.cpp
+)
 
-target_link_libraries(${projectTestName} ${projectName} gtest_main)
+FetchContent_MakeAvailable_With_Check(${espMockName})
+
+target_link_libraries(${projectTestName} ${projectName} gtest_main ${espMockName})
 
 add_test(NAME ${projectTestName} COMMAND ${projectTestName})

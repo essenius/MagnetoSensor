@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.14)
 
 set(projectName MagnetoSensor)
 set(projectTestName ${projectName}Test)
+set(espMockName esp32-mock) # lower case is important for fetching the library
 
 project(${projectName} VERSION 0.0.3 LANGUAGES CXX)
 
@@ -20,18 +21,14 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${PROJECT_SOURCE_DIR}/lib;${PROJECT_BINARY_DIR}/lib/cmake")
 
+add_subdirectory(lib)
+add_subdirectory(src)
+
 if (TOP_LEVEL) 
-  message(STATUS "Top level project - enabling code coverage")
-  add_subdirectory(lib)
+  message(STATUS "Top level project - enabling tests")
   set(CODE_COVERAGE ON)
   include(code-coverage)
   add_code_coverage()
-endif()
-
-add_subdirectory(src)
-
-if(TOP_LEVEL)
-  message(STATUS "Top level project - enabling tests")
   enable_testing()
   add_subdirectory(test)
   target_code_coverage(${projectTestName} EXCLUDE build/_deps/googletest-src/* test/*) 

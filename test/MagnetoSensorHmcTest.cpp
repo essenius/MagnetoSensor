@@ -92,7 +92,7 @@ namespace MagnetoSensorsTest {
         setRealTime(true);
         Wire.begin();
         sensor.begin();
-        EXPECT_EQ(MagnetoSensorHmc::DefaultAddress, Wire.getAddress()) << "Default address OK";
+        EXPECT_EQ(0x1e, Wire.getAddress()) << "Default address OK";
         constexpr uint8_t BufferBegin[] = {0, 0x78, 1, 0xa0, 2, 0x01, 2, 0x01, 3};
         EXPECT_EQ(sizeof BufferBegin, Wire.writeMismatchIndex(BufferBegin, sizeof BufferBegin)) << "writes for begin ok";
         // we are at the default address so the sensor should report it's on
