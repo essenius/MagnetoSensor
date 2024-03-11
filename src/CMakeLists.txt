@@ -8,7 +8,7 @@ foreach (entry ${CMAKE_PREFIX_PATH})
     list(APPEND includeFolders ${entry}/include)
 endforeach() 
 
-set(myHeaders MagnetoSensor.h MagnetoSensorHmc.h MagnetoSensorNull.h MagnetoSensorQmc.h)
+set(myHeaders MagnetoSensor.h MagnetoSensorHmc.h MagnetoSensorNull.h MagnetoSensorQmc.h SensorData.h)
 set(mySources MagnetoSensor.cpp MagnetoSensorHmc.cpp MagnetoSensorQmc.cpp)
 
 target_sources (${projectName} PUBLIC ${myHeaders} PRIVATE ${mySources})
