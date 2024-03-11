@@ -12,7 +12,7 @@
     },
     {
       "kind": "git",
-      "baseline": "91258a4a7b4802074034334daf76cb40856b5a3d",
+      "baseline": "a29b9c191979f83064caf5f8fb2436e70fcfbb20",
       "repository": "https://github.com/essenius/vcpkg",
       "packages": [ "esp32-mock", "safe-cstring" ]
     }
