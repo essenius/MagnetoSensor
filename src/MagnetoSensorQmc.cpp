@@ -67,6 +67,7 @@ namespace MagnetoSensors {
         short result = _wire->read();
         result |= _wire->read() << BitsPerByte;
         // if we got a positive saturation, shift it to SHRT_MIN as SHRT_MAX means an error
+        // We live with not testing this as the Wire mock can't handle word values unless byte values are the same
         if (result == SHRT_MAX) result = SHRT_MIN;
         return result;
     }
