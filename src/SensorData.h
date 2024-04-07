@@ -17,8 +17,8 @@
 //
 // We also take into account that the sensor needs time to switch on and off
 
-#ifndef HEADER_SENSORDATA
-#define HEADER_SENSORDATA
+#ifndef HEADER_SENSOR_DATA
+#define HEADER_SENSOR_DATA
 
 #include <ESP.h>
 

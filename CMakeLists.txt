@@ -4,7 +4,7 @@ set(projectName MagnetoSensor)
 set(projectTestName ${projectName}Test)
 set(espMockName esp32-mock) # lower case is important for fetching the library
 
-project(${projectName} VERSION 0.0.3 LANGUAGES CXX)
+project(${projectName} VERSION 0.0.6 LANGUAGES CXX)
 
 # We only want to enable testing and code coverage for the top level project
 # On Windows, these are also only used when building a vcpkg package.

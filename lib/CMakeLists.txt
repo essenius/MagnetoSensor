@@ -10,7 +10,7 @@ include (FetchContent)
 FetchContent_Declare(
     ${espMockName}
     GIT_REPOSITORY https://github.com/essenius/esp32-mock
-    GIT_TAG v0.0.2    
+    GIT_TAG v0.1.7    
 )
 
 FetchContent_MakeAvailable_With_Check(${espMockName})
